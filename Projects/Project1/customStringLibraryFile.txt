@@ -1,0 +1,39 @@
+class MyString {
+  public:
+    MyString(const char* str = "");
+    ~MyString();
+    int length() const;
+    void print() const;
+    MyString operator+(const MyString &other) const;
+
+  private:
+    char* data_;
+    int length_;
+};
+
+MyString::MyString(const char* str) {
+  length_ = strlen(str);
+  data_ = new char[length_ + 1];
+  strcpy(data_, str);
+}
+
+MyString::~MyString() {
+  delete[] data_;
+}
+
+int MyString::length() const {
+  return length_;
+}
+
+void MyString::print() const {
+  cout << data_ << endl;
+}
+
+MyString MyString::operator+(const MyString &other) const {
+  MyString result;
+  result.length_ = length_ + other.length_;
+  result.data_ = new char[result.length_ + 1];
+  strcpy(result.data_, data_);
+  strcat(result.data_, other.data_);
+  return result;
+}

@@ -1,0 +1,60 @@
+markovList::markovList(const char* filename)
+{
+	
+	ifstream file(filename);
+	stringstream parser, splitter;//stream means that we are inputting using >> or <<; parser is key; splitter is value; map(key) = value;
+	string line, index, word; 
+	float weight;
+	edge * newEdge;
+	edge * tmp;
+	//int i = 0;
+	int j = 0;
+	srand (time(0));
+	
+	if(file.good()) 
+	{
+		//Read in size and dynamically allocate array
+		file >> corpusSize;
+		file.ignore(1, '\n');
+		edgeArray = new edge* [corpusSize];
+		for(int i=0; i<corpusSize; i++)
+		{
+			edgeArray[i] = NULL;
+		}
+
+		while(getline(file, line, '\n')) //map every word to a position in the matrix, keep the line in an array of buffers for later
+		{
+			parser.clear();
+			parser << line;
+			getline(parser, index,',');	//pulls the first word of the line, which is the node for which we're making a list of neighbors
+			//initialize an empty list at the index---
+			tmp = edgeArray[j];
+			cout << endl;
+			while(getline(parser, word, ','))
+			{
+				//allocate a new node in the edge list---
+				splitter.clear();
+				splitter.str(word);
+				splitter >> word >> weight;
+				//stick word and weight on the node you've just allocatezd---
+				newEdge = new edge(word, weight);
+				
+				//make sure your new node is attached to the list---
+				if (!edgeArray[j])
+				{
+					edgeArray[j] = newEdge;
+					tmp = edgeArray[j];
+					cout << "\n" << tmp->value;
+				}
+				else
+				{
+					tmp->nextInList = newEdge; // i->edge1->edge2->newEdge
+					tmp = tmp->nextInList;
+					cout << "\n   " << tmp->value;
+				}
+			}
+			j++;
+		}
+		
+	}
+}
